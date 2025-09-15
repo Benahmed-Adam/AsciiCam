@@ -59,7 +59,7 @@ Lors du choix du mode `vid`, le programme demande le chemin de la vidéo (par ex
 Exemple :
 
 ```python
-renderer = ascii_renderer("vid", couleur=True)
+renderer = ascii_renderer("vid", couleur=True, opti=True)
 ```
 
 ## Notes
