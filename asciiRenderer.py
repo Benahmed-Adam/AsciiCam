@@ -4,37 +4,41 @@ import sys
 import os
 import time
 import numpy as np
-from pygame import mixer
+from pygame import mixer, init
 
 class ascii_renderer:
-
     def __init__(self,mode,couleur=False) -> None:
+        init()
         self.terminal_size = os.get_terminal_size()
         self.char_list = " .:-=+*#%@"
         self.reset_code = "\033[0m"
         self.color_code = "\033[38;2;{};{};{}m"
         self.couleur = couleur
         self.last_frame = None
+        self.isAudio = False
         if mode == "cam":
             self.mode = mode
             self.frame_time = 1/1000
         elif mode == "vid":
-            import moviepy.editor
+            import moviepy
             self.mode = mode
             self.vid = str(input("Entrez le chemain vers la vidéo : "))          
-            video = moviepy.editor.VideoFileClip(self.vid)
+            video = moviepy.VideoFileClip(self.vid)
             audio = video.audio
             self.FPS = video.fps
             self.frame_time = 1.0 / self.FPS
             self.video_duration = video.duration
-            audio.write_audiofile(r"audio.mp3")
+            if audio is not None:
+                audio.write_audiofile(r"audio.mp3")
+                self.isAudio = True
         else:
             raise ValueError("Entrez une valeur valide !")
 
     
     def play_song(self):
-        mixer.music.load(r"audio.mp3")
-        mixer.music.play(1)
+        if self.isAudio:
+            mixer.music.load(r"audio.mp3")
+            mixer.music.play(1)
     
     def set_cursor_pos(self,x,y):
         sys.stdout.write(f"\033[{y};{x}H")
@@ -114,7 +118,6 @@ class ascii_renderer:
                 self.ascii_render(frame, cols, rows)
                 self.limit_fps(last_frame_time)
                 last_frame_time = time.time()
-
         else:
             cap = cv2.VideoCapture(self.vid)
    
@@ -124,7 +127,6 @@ class ascii_renderer:
             last_frame_time = time.time()
             while(cap.isOpened()):
                 ret, frame = cap.read()
-
                 if ret == True:
                 
                     cols, rows = os.get_terminal_size()
