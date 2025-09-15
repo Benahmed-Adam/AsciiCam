@@ -65,6 +65,6 @@ renderer = ascii_renderer("vid", couleur=True, opti=True)
 ## Notes
 
 * Le rendu dépend de la taille du terminal (`os.get_terminal_size`)
-* Pour de meilleures performances, utilisez un terminal en plein écran
+* Pour de meilleures performances, utilisez un terminal qui est zoomé
 * Ne pas redimensionner le terminal, lors du rendu sous peine de crash
 * Le rendu peut varier selon la résolution choisie et la taille du terminal
