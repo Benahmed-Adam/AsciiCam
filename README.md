@@ -33,7 +33,7 @@ pip install pillow opencv-python numpy pygame moviepy
 ```python
 from asciiRenderer import ascii_renderer
 
-renderer = ascii_renderer("cam", couleur=True)
+renderer = ascii_renderer("cam", couleur=True, opti=True)
 renderer.run()
 ```
 
@@ -42,7 +42,7 @@ renderer.run()
 ```python
 from asciiRenderer import ascii_renderer
 
-renderer = ascii_renderer("vid", couleur=False)
+renderer = ascii_renderer("vid", couleur=False, opti=True)
 renderer.run()
 ```
 
