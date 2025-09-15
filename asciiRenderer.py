@@ -3,11 +3,10 @@ import cv2
 import sys
 import os
 import time
-import numpy as np
 from pygame import mixer, init
 
 class ascii_renderer:
-    def __init__(self,mode,couleur=False) -> None:
+    def __init__(self,mode,couleur=False, opti=False) -> None:
         init()
         self.terminal_size = os.get_terminal_size()
         self.char_list = " .:-=+*#%@"
@@ -16,6 +15,7 @@ class ascii_renderer:
         self.couleur = couleur
         self.last_frame = None
         self.isAudio = False
+        self.opti = False
         if mode == "cam":
             self.mode = mode
             self.frame_time = 1/1000
@@ -68,36 +68,37 @@ class ascii_renderer:
                 result.append(line)
             self.last_frame = result
         else:
-            image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            image = image.resize((cols, rows))
-            result = []
-            for y in range(rows):
-                line = ""
-                for x in range(cols):
-                    rgb = image.getpixel((x, y))
-                    char_mem = self.pxl_to_char(rgb=rgb)
-                    line += char_mem
-                    if self.last_frame[y][x] != char_mem:
+            if self.opti:
+                image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+                image = image.resize((cols, rows))
+                result = []
+                for y in range(rows):
+                    line = ""
+                    for x in range(cols):
+                        rgb = image.getpixel((x, y))
+                        char_mem = self.pxl_to_char(rgb=rgb)
+                        line += char_mem
+                        if self.last_frame[y][x] != char_mem:
+                            self.set_cursor_pos(x,y)
+                            char = self.pxl_to_char(rgb=rgb,active=self.couleur)
+                            sys.stdout.write(char)
+                    result.append(line)
+                self.last_frame = result
+            else:
+                image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+                image = image.resize((cols, rows))
+                result = []
+                for y in range(rows):
+                    line = ""
+                    for x in range(cols):
+                        rgb = image.getpixel((x, y))
                         self.set_cursor_pos(x,y)
+                        char_mem = self.pxl_to_char(rgb=rgb)
+                        line += char_mem
                         char = self.pxl_to_char(rgb=rgb,active=self.couleur)
                         sys.stdout.write(char)
-                result.append(line)
-            self.last_frame = result
-            # image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            # image = image.resize((cols, rows))
-            # result = []
-            # for y in range(rows):
-            #     line = ""
-            #     for x in range(cols):
-            #         rgb = image.getpixel((x, y))
-            #         self.set_cursor_pos(x,y)
-            #         char_mem = self.pxl_to_char(rgb=rgb)
-            #         line += char_mem
-            #         char = self.pxl_to_char(rgb=rgb,active=self.couleur)
-            #         sys.stdout.write(char)
-
     
-    def limit_fps(self,last_frame_time ):
+    def limit_fps(self,last_frame_time):
         elapsed_time = time.time() - last_frame_time
 
         if elapsed_time < self.frame_time:
