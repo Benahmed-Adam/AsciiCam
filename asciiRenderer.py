@@ -22,7 +22,7 @@ class ascii_renderer:
         elif mode == "vid":
             import moviepy
             self.mode = mode
-            self.vid = str(input("Entrez le chemain vers la vidéo : "))          
+            self.vid = str(input("Path to the video : "))          
             video = moviepy.VideoFileClip(self.vid)
             audio = video.audio
             self.FPS = video.fps
@@ -31,8 +31,6 @@ class ascii_renderer:
             if audio is not None:
                 audio.write_audiofile(r"audio.mp3")
                 self.isAudio = True
-        else:
-            raise ValueError("Entrez une valeur valide !")
 
     
     def play_song(self):
@@ -113,7 +111,7 @@ class ascii_renderer:
             vid = cv2.VideoCapture(0)
             last_frame_time = time.time()
 
-            while True:
+            while cv2.waitKey(1) != ord('q'):
                 ret, frame = vid.read()
                 cols, rows = os.get_terminal_size()
                 self.ascii_render(frame, cols, rows)
@@ -123,7 +121,7 @@ class ascii_renderer:
             cap = cv2.VideoCapture(self.vid)
    
             if (cap.isOpened()== False): 
-                print("Mauvais chemain")
+                print("Bad path")
             self.play_song()
             last_frame_time = time.time()
             while(cap.isOpened()):
