@@ -1,34 +1,33 @@
 # AsciiCam
 
-Ce projet est un moteur de rendu en **ASCII Art** qui transforme un flux vidéo (webcam ou fichier vidéo) en une matrice de caractères directement dans le terminal. Il est également possible d’activer un rendu en couleur et de synchroniser le son de la vidéo.
+**AsciiCam** is an ASCII Art rendering engine that transforms a video stream (webcam or video file) into a character matrix directly within your terminal. It supports color rendering and synchronized audio playback.
 
-## Fonctionnalités
+## Features
 
-* Lecture en temps réel via la webcam
-* Lecture de fichiers vidéo avec restitution audio synchronisée
-* Conversion pixel → caractère ASCII en niveaux de gris ou en couleur
-* Optimisation du rendu grâce à un rafraîchissement différentiel (seules les zones modifiées sont mises à jour)
-* Limitation du framerate pour respecter le FPS d’origine
+* **Real-time Capture:** Live streaming via webcam.
+* **Video Playback:** Local file playback with synchronized audio restoration.
+* **Dynamic Conversion:** Converts pixels to ASCII characters in grayscale or full color.
+* **Rendering Optimization:** Utilizes differential refreshing (only modified zones are updated) for better performance.
+* **Frame Rate Control:** Limits FPS to match the original source file.
 
-## Dépendances
+## Dependencies
 
-Avant d’exécuter le script, installez les bibliothèques nécessaires :
+Before running the script, install the required libraries:
 
 ```bash
 pip install pillow opencv-python numpy pygame moviepy
 ```
 
-## Structure du projet
+## Project Structure
 
-* **ascii\_renderer** : classe principale qui gère l’acquisition vidéo, la conversion en ASCII et l’affichage dans le terminal
-* **Modes** :
+* **`ascii_renderer`**: The core class managing video acquisition, ASCII conversion, and terminal output.
+* **Modes**:
+    * `cam`: Live capture via the system webcam.
+    * `vid`: Video file playback with automated audio track extraction and playback.
 
-  * `cam` : capture en direct via la webcam
-  * `vid` : lecture d’un fichier vidéo avec extraction et lecture de la piste audio
+## Usage
 
-## Utilisation
-
-### 1. Webcam
+### 1. Webcam Mode
 
 ```python
 from asciiRenderer import ascii_renderer
@@ -37,7 +36,7 @@ renderer = ascii_renderer("cam", couleur=True, opti=True)
 renderer.run()
 ```
 
-### 2. Vidéo locale
+### 2. Video Mode
 
 ```python
 from asciiRenderer import ascii_renderer
@@ -46,25 +45,24 @@ renderer = ascii_renderer("vid", couleur=False, opti=True)
 renderer.run()
 ```
 
-Lors du choix du mode `vid`, le programme demande le chemin de la vidéo (par exemple `video.mp4`).
+When using `vid` mode, the program will prompt you for the video file path (e.g., `video.mp4`).
 
-## Paramètres
+## Parameters
 
-* **mode** : `"cam"` ou `"vid"`
-* **couleur** (`bool`) :
+* **`mode`**: `"cam"` or `"vid"`.
+* **`couleur`** (bool):
+    * `False` → Grayscale ASCII rendering.
+    * `True` → Full-color ASCII rendering.
+* **`opti`** (bool): Enables differential refreshing for performance.
 
-  * `False` → rendu ASCII en niveaux de gris
-  * `True` → rendu ASCII en couleur
-
-Exemple :
-
+Example:
 ```python
 renderer = ascii_renderer("vid", couleur=True, opti=True)
 ```
 
 ## Notes
 
-* Le rendu dépend de la taille du terminal (`os.get_terminal_size`)
-* Pour de meilleures performances, utilisez un terminal qui est zoomé
-* Ne pas redimensionner le terminal, lors du rendu sous peine de crash
-* Le rendu peut varier selon la résolution choisie et la taille du terminal
+* **Terminal Size:** Rendering resolution depends on your current terminal dimensions (`os.get_terminal_size`).
+* **Performance:** For the best visual results, zoom out of your terminal to increase the character "pixel" density.
+* **Stability:** Avoid resizing the terminal window during rendering, as this may cause the program to crash.
+* **Variability:** Output quality varies based on chosen resolution and terminal font size.
